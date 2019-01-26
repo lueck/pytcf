@@ -12,4 +12,5 @@ setup(name='pytcf',
       packages=['pytcf'],
       zip_safe=False,
       test_suite='nose.collector',
-      tests_require=['nose'])
+      tests_require=['nose'],
+      scripts = ["bin/tcf2csv"])
