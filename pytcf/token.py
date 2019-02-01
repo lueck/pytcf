@@ -1,4 +1,4 @@
-import csv
+import sys, csv
 
 class Token(object):
     """A token and further information on it like its ID assigned by the
@@ -10,17 +10,24 @@ class Token(object):
             
 
 def writeCsv(tokens,
-             filename,
+             filename = None,
              attrs = ["tokenNum", "token", "tokenId", "start", "end", "srcStart", "srcEnd", "lemma", "POStag", "sentenceNum", "sentenceId", "numInSentence"],
+             header = True,
              sortAttr = lambda x: getattr(x, "tokenNum", None)):
 
     def _strAttr(at):
         if type(at) is unicode:
             return at.encode("utf-8")
+        elif at is None:
+            return None
         else:
             return unicode(at).encode("utf-8")
-    
-    with open(filename, "wb") as csv_file:
-        wr = csv.writer(csv_file, delimiter = ",")
-        for tok in sorted(tokens.values(), key=sortAttr):
-            wr.writerow([_strAttr(at) for at in tok.getAttrsInOrder(attrs)])
+
+    handle = open(filename, 'w') if filename else sys.stdout
+    wr = csv.writer(handle, delimiter = ",")
+    if header:
+        wr.writerow(attrs)
+    for tok in sorted(tokens.values(), key=sortAttr):
+        wr.writerow([_strAttr(at) for at in tok.getAttrsInOrder(attrs)])
+    if handle is not sys.stdout:
+        handle.close()
