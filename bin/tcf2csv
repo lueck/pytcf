@@ -6,19 +6,19 @@ from pytcf.parser import parseTokens
 from pytcf.token import writeCsv
 from signal import signal, SIGPIPE, SIG_DFL
 
-def main(argv):
-    signal(SIGPIPE,SIG_DFL) # in case you run tcf2csv ... | head
-    parser = argparse.ArgumentParser(description="Convert a file from Text Corpus Format (TCF) into CSV.")
-    parser.add_argument("infile",
-                        help="The TCF input file")
-    parser.add_argument("-H", "--no-header",
-                        help="Do not include a header in the csv output. By default, it does.",
-                        action="store_false")
-    parser.add_argument("-o", "--outfile",
-                        help="The CSV output file. Writing to stdout if not specified.")
-    args = parser.parse_args()
-    ts = parseTokens(args.infile)
-    writeCsv(ts, args.outfile, header=args.no_header)
-    
-if __name__ == "__main__":
-   main(sys.argv[1:])
+# in case you pipe output like in tcf2csv ... | head
+# see https://stackoverflow.com/questions/14207708/ioerror-errno-32-broken-pipe-python
+signal(SIGPIPE,SIG_DFL)
+
+parser = argparse.ArgumentParser(description="Convert a file from Text Corpus Format (TCF) into CSV.")
+parser.add_argument("infile",
+                    help="The TCF input file")
+parser.add_argument("-H", "--no-header",
+                    help="Do not include a header in the csv output. By default, it does.",
+                    action="store_false")
+parser.add_argument("-o", "--outfile",
+                    help="The CSV output file. Writing to stdout if not specified.")
+args = parser.parse_args()
+
+ts = parseTokens(args.infile)
+writeCsv(ts, args.outfile, header=args.no_header)
