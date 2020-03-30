@@ -1,5 +1,7 @@
 import sys, csv
 
+default_fields = ["tokenNum", "token", "tokenId", "start", "end", "srcStart", "srcEnd", "lemma", "POStag", "sentenceNum", "sentenceId", "numInSentence"]
+
 class Token(object):
     """A token and further information on it like its ID assigned by the
     tokenizer, the lemma, the POS-tag etc. """
@@ -11,7 +13,7 @@ class Token(object):
 
 def writeCsv(tokens,
              filename = None,
-             attrs = ["tokenNum", "token", "tokenId", "start", "end", "srcStart", "srcEnd", "lemma", "POStag", "sentenceNum", "sentenceId", "numInSentence"],
+             attrs = default_fields,
              header = True,
              sortAttr = lambda x: getattr(x, "tokenNum", None)):
 

@@ -3,7 +3,7 @@
 import sys, argparse
 
 from pytcf.parser import parseTokens
-from pytcf.token import writeCsv
+from pytcf.token import writeCsv, default_fields
 from signal import signal, SIGPIPE, SIG_DFL
 
 # in case you pipe output like in tcf2csv ... | head
@@ -18,7 +18,11 @@ parser.add_argument("-H", "--no-header",
                     action="store_false")
 parser.add_argument("-o", "--outfile",
                     help="The CSV output file. Writing to stdout if not specified.")
+parser.add_argument("-f", "--fields",
+                    help="List of the fields contained in the output. The list should be given as a quoted string and the elements delimited by space. Default: \"" + ' '.join(default_fields) + "\"",
+                    default=' '.join(default_fields))
 args = parser.parse_args()
 
 ts = parseTokens(args.infile)
-writeCsv(ts, args.outfile, header=args.no_header)
+
+writeCsv(ts, args.outfile, header=args.no_header, attrs = args.fields.split())
